@@ -1,0 +1,8 @@
+requests
+subprocess
+os
+sys
+atexit
+argparse
+json
+urllib3
