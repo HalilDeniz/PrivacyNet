@@ -59,6 +59,16 @@ python3 privacynet.py -l
  [+] City: {city}
 ```
 
+## Contributing
+Contributions are welcome! To contribute to PrivacyNet, follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your changes to your forked repository.
+5. Open a pull request in the main repository.
+
+
 ## Contact
 
 If you have any questions, comments, or suggestions about PrivacyNet, please feel free to contact me:
