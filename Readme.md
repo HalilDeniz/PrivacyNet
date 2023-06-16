@@ -5,7 +5,8 @@ PrivacyNet is an anonymization tool that configures iptables and Tor to route al
 
 - Installing and removing iptables rules
 - Connecting to the Tor network to get its IP address and geolocate it
-- Change circuit with a new IP
+- Changing circuit with a new IP
+- Automatic IP change at a specified interval
 - Fast and easy to use
 
 ## Installation
@@ -57,6 +58,33 @@ python3 privacynet.py -l
  [+] Your IP is {ip adresi}
  [+] Country: {Country}
  [+] City: {city}
+ 
+ ************* OR *************
+ 
+ python3 privacynet.py -a -t 30
+ [*] Getting public IP, please wait...
+ [+] Your IP is 109.70.100.82
+ [+] Country: Austria
+ [+] City: Vienna
+ [*] IP changed successfully
+
+ [*] Getting public IP, please wait...
+ [+] Your IP is 192.42.116.176
+ [+] Country: Netherlands
+ [+] City: Amsterdam
+ [*] IP changed successfully
+
+ [*] Getting public IP, please wait...
+ [+] Your IP is 45.154.98.28
+ [+] Country: Netherlands
+ [+] City: Oude Meer
+ [*] IP changed successfully
+.
+.
+.
+.
+
+
 ```
 
 ## Contributing
