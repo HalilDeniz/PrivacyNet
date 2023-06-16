@@ -14,8 +14,8 @@ from time import sleep
 import subprocess
 import requests
 
-class PrivacyNet(object):
 
+class TorIptables(object):
     def __init__(self):
         self.local_dnsport = "53"  # DNSPort
         self.virtual_net = "10.0.0.0/10"  # VirtualAddrNetwork
@@ -34,20 +34,22 @@ TransPort %s
 DNSPort %s
 ''' % (basename(__file__), self.trans_port, self.virtual_net, self.trans_port, self.local_dnsport)
 
-    def geolocate_ip(self, ip):
-        try:
-            response = requests.get(f"http://ip-api.com/json/{ip}")
-            data = response.json()
-            country = data["country"]
-            city = data["city"]
-            return country, city
-        except Exception as e:
-            print(f"Error geolocating IP: {e}")
-            return None, None
+        self.log_file = "privacynet.log"  # Günlük dosyasının adı
+        self.log = open(self.log_file, "a")  # Günlük dosyasını oluşturmak ve açmak
+
+    def __del__(self):
+        if self.log:
+            self.log.close()  # Program sonlandığında günlük dosyasını kapat
+
+    def write_log(self, message):
+        if self.log:
+            self.log.write(message + "\n")  # Günlük dosyasına yaz
 
     def flush_iptables_rules(self):
         call(["iptables", "-F"])
         call(["iptables", "-t", "nat", "-F"])
+
+        self.write_log("[+] Flushed iptables rules")  # Günlük
 
     def load_iptables_rules(self):
         self.flush_iptables_rules()
@@ -70,24 +72,37 @@ DNSPort %s
 
         # See https://trac.torproject.org/projects/tor/wiki/doc/TransparentProxy#WARNING
         # See https://lists.torproject.org/pipermail/tor-talk/2014-March/032503.html
-        call(["iptables", "-I", "OUTPUT", "!", "-o", "lo", "!", "-d",self.local_loopback, "!", "-s", self.local_loopback, "-p", "tcp","-m", "tcp", "--tcp-flags", "ACK,FIN", "ACK,FIN", "-j", "DROP"])
-        call(["iptables", "-I", "OUTPUT", "!", "-o", "lo", "!", "-d",self.local_loopback, "!", "-s", self.local_loopback, "-p", "tcp","-m", "tcp", "--tcp-flags", "ACK,RST", "ACK,RST", "-j", "DROP"])
-        call(["iptables", "-t", "nat", "-A", "OUTPUT", "-m", "owner", "--uid-owner","%s" % self.tor_uid, "-j", "RETURN"])
-        call(["iptables", "-t", "nat", "-A", "OUTPUT", "-p", "udp", "--dport",self.local_dnsport, "-j", "REDIRECT", "--to-ports", self.local_dnsport])
+        call(["iptables", "-I", "OUTPUT", "!", "-o", "lo", "!", "-d", self.local_loopback, "!", "-s", self.local_loopback, "-p", "tcp", "-m", "tcp", "--tcp-flags", "ACK,FIN", "ACK,FIN", "-j", "DROP"])
+        call(["iptables", "-I", "OUTPUT", "!", "-o", "lo", "!", "-d", self.local_loopback, "!", "-s", self.local_loopback, "-p", "tcp", "-m", "tcp", "--tcp-flags", "ACK,RST", "ACK,RST", "-j", "DROP"])
+        call(["iptables", "-t", "nat", "-A", "OUTPUT", "-m", "owner", "--uid-owner", "%s" % self.tor_uid, "-j", "RETURN"])
+        call(["iptables", "-t", "nat", "-A", "OUTPUT", "-p", "udp", "--dport", self.local_dnsport, "-j", "REDIRECT", "--to-ports", self.local_dnsport])
 
         for net in self.non_tor:
-            call(["iptables", "-t", "nat", "-A", "OUTPUT", "-d", "%s" % net, "-j","RETURN"])
+            call(["iptables", "-t", "nat", "-A", "OUTPUT", "-d", "%s" % net, "-j", "RETURN"])
 
-        call(["iptables", "-t", "nat", "-A", "OUTPUT", "-p", "tcp", "--syn", "-j","REDIRECT", "--to-ports", "%s" % self.trans_port])
-        call(["iptables", "-A", "OUTPUT", "-m", "state", "--state","ESTABLISHED,RELATED", "-j", "ACCEPT"])
+        call(["iptables", "-t", "nat", "-A", "OUTPUT", "-p", "tcp", "--syn", "-j", "REDIRECT", "--to-ports", "%s" % self.trans_port])
+        call(["iptables", "-A", "OUTPUT", "-m", "state", "--state", "ESTABLISHED,RELATED", "-j", "ACCEPT"])
         for net in self.non_tor:
             call(["iptables", "-A", "OUTPUT", "-d", "%s" % net, "-j", "ACCEPT"])
 
         call(["iptables", "-A", "OUTPUT", "-m", "owner", "--uid-owner", "%s" % self.tor_uid, "-j", "ACCEPT"])
         call(["iptables", "-A", "OUTPUT", "-j", "REJECT"])
 
+        self.write_log("[+] Loaded iptables rules")  # Günlük
+
+    def geolocate_ip(self, ip):
+        try:
+            response = requests.get(f"http://ip-api.com/json/{ip}")
+            data = response.json()
+            country = data["country"]
+            city = data["city"]
+            return country, city
+        except Exception as e:
+            print(f"Error geolocating IP: {e}")
+            return None, None
+
     def get_ip(self):
-        print(" {0}".format("[\033[92m*\033[0m] Getting public IP, please wait..."))
+        print(" [\033[92m*\033[0m] \033[93mGetting public IP, please wait...\033[0m")
         retries = 0
         my_public_ip = None
         while retries < 12 and not my_public_ip:
@@ -109,39 +124,59 @@ DNSPort %s
             print(" {0}".format("[\033[92m+\033[0m] Your IP is \033[92m%s\033[0m" % my_public_ip))
             print(" {0}".format("[\033[92m+\033[0m] Country: \033[92m%s\033[0m" % country))
             print(" {0}".format("[\033[92m+\033[0m] City: \033[92m%s\033[0m" % city))
+            self.write_log(f"[+] Your IP is {my_public_ip}\n[+] Country: {country}\n[+] City: {city}")  # Günlük
         else:
             print(" {0}".format("[\033[92m+\033[0m] Your IP is \033[92m%s\033[0m" % my_public_ip))
             print(" {0}".format("[\033[93m!\033[0m] Error geolocating IP"))
+            self.write_log(f"[+] Your IP is {my_public_ip}\n[!] Error geolocating IP")  # Günlük
+
+    def change_ip(self):
+        call(['kill', '-HUP', '%s' % subprocess.getoutput('pidof tor')])
+        self.get_ip()
 
 
 if __name__ == '__main__':
     parser = ArgumentParser(
-        description='Tor Iptables script for loading and unloading iptables rules')
-    parser.add_argument('-l','--load', action='store_true', help='This option will load tor iptables rules')
-    parser.add_argument('-f', '--flush',action='store_true', help='This option flushes the iptables rules to default')
-    parser.add_argument('-r','--refresh', action='store_true', help='This option will change the circuit and gives new IP')
+        description=
+        'PrivacyNet is an anonymization tool for loading and unloading iptables rules')
+    parser.add_argument('-l', '--load', action='store_true', help='This option will load tor iptables rules')
+    parser.add_argument('-f', '--flush', action='store_true', help='This option flushes the iptables rules to default')
+    parser.add_argument('-r', '--refresh', action='store_true', help='This option will change the circuit and gives new IP')
     parser.add_argument('-i', '--ip', action='store_true', help='This option will output the current public IP address')
+    parser.add_argument('-a', '--auto', action='store_true', help='This option enables automatic IP change every X seconds')
+    parser.add_argument('-t', '--interval', type=int, default=3600, help='Interval for automatic IP change in seconds (default: 3600)')
     args = parser.parse_args()
 
     try:
-        load_tables = PrivacyNet()
-        if isfile(load_tables.tor_config_file):
-            if not 'VirtualAddrNetwork' in open(load_tables.tor_config_file).read():
-                with open(load_tables.tor_config_file, 'a+') as torrconf:
-                    torrconf.write(load_tables.torrc)
+        privacy_net = TorIptables()
+        if isfile(privacy_net.tor_config_file):
+            if not 'VirtualAddrNetwork' in open(privacy_net.tor_config_file).read():
+                with open(privacy_net.tor_config_file, 'a+') as torrconf:
+                    torrconf.write(privacy_net.torrc)
 
         if args.load:
-            load_tables.load_iptables_rules()
+            privacy_net.load_iptables_rules()
         elif args.flush:
-            load_tables.flush_iptables_rules()
+            privacy_net.flush_iptables_rules()
             print(" {0}".format("[\033[93m!\033[0m] Anonymizer status \033[91m[OFF]\033[0m"))
+            privacy_net.write_log("[!] Anonymizer status [OFF]")  # Günlük
         elif args.ip:
-            load_tables.get_ip()
+            privacy_net.get_ip()
         elif args.refresh:
-            call(['kill', '-HUP', '%s' % subprocess.getoutput('pidof tor')])
-            load_tables.get_ip()
+            privacy_net.change_ip()
+        elif args.auto:
+            interval = args.interval
+            try:
+                while True:
+                    privacy_net.change_ip()
+                    print(" {0}".format("[\033[92m*\033[0m] IP changed successfully\n"))
+                    sleep(interval)
+            except KeyboardInterrupt:
+                print("\n[\033[91m!\033[0m] Program terminated by user")
         else:
             parser.print_help()
     except Exception as err:
         print(f"[!] Run as super user: {err[1]}")
+        privacy_net.write_log(f"[!] Run as super user: {err[1]}")  # Günlük
+
 
