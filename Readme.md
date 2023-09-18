@@ -1,8 +1,11 @@
 # PrivacyNet: Privacy Network
 
 PrivacyNet is an anonymization tool that configures iptables and Tor to route all services, traffic and DNS through the Tor network. This tool allows users to route internet traffic through Tor and hide their real IP address.
-## Features
+<img src="source/privacynet.png">
 
+
+
+## Features
 - Installing and removing iptables rules
 - Connecting to the Tor network to get its IP address and geolocate it
 - Changing circuit with a new IP
