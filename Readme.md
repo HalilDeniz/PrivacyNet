@@ -101,10 +101,12 @@ Contributions are welcome! To contribute to PrivacyNet, follow these steps:
 
 If you have any questions, comments, or suggestions about PrivacyNet, please feel free to contact me:
 
-- LinkedIn: [LinkedIn](https://www.linkedin.com/in/halil-ibrahim-deniz/)
-- TryHackMe: [TryHackMe](https://tryhackme.com/p/halilovic)
-- Instagram: [Instagram](https://www.instagram.com/deniz.halil333/)
-- YouTube: [YouTube](https://www.youtube.com/c/HalilDeniz)
+- Linktr [halildeniz](https://linktr.ee/halildeniz)
+- DenizHalil [DenizHalil](https://denizhalil.com)
+- LinkedIn: [Halil Ibrahim Deniz](https://www.linkedin.com/in/halil-ibrahim-deniz/)
+- TryHackMe: [Halilovic](https://tryhackme.com/p/halilovic)
+- Instagram: [deniz.halil333](https://www.instagram.com/deniz.halil333/)
+- YouTube: [Halil Deniz](https://www.youtube.com/c/HalilDeniz)
 - Email: halildeniz313@gmail.com
 
 ## About the Original Author
