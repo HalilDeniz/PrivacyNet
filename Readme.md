@@ -13,14 +13,14 @@ PrivacyNet is an anonymization tool that configures iptables and Tor to route al
 - Fast and easy to use
 
 ## Installation
-```
+```shell
 git clone https://github.com/HalilDeniz/PrivacyNet.git` 
 ```
 ## Requirements
 
 Before you can use PrivacyNet, you need to make sure that you have the necessary requirements installed. You can install these requirements by running the following command:
 
-```
+```shell
 pip install -r requirements.txt
 ```
 
@@ -28,7 +28,7 @@ pip install -r requirements.txt
 
 Before you can use PrivacyNet, first you need to install the tor package:
 
-```
+```shell
 apt-get clean
 apt-get update
 apt-get upgrade 
@@ -38,7 +38,7 @@ apt-get install tor
 
 Run the following command to use the tool::
 
-```
+```shell
 python3 privacynet.py
 ```
 
@@ -53,7 +53,7 @@ python3 privacynet.py
 
 You can use the tool as follows:
 
-```
+```shell
 python3 privacynet.py -l
  [+] Anonymizer status [ON]
  [*] Getting public IP, please wait...
