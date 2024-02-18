@@ -15,7 +15,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'privacynet=privacynet.privacynet:privacynet',
+            'privacynet=privacynet.privacynet:main',
         ],
     },
     classifiers=[
