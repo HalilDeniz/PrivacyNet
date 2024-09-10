@@ -132,7 +132,7 @@ DNSPort %s
         self.get_ip()
 
 
-if __name__ == '__main__':
+def main():
     parser = ArgumentParser(
         description=
         'PrivacyNet is an anonymization source for loading and unloading iptables rules')
@@ -175,3 +175,6 @@ if __name__ == '__main__':
     except Exception as err:
         print(f"[!] Run as super user: {err[1]}")
         privacy_net.write_log(f"[!] Run as super user: {err[1]}")  # Günlük
+
+if __name__ == '__main__':
+    main()
