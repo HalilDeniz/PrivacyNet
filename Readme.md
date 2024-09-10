@@ -48,44 +48,10 @@ python3 privacynet.py
 - `-f` or `--flush`: Flushes the iptables rules to default.
 - `-r` or `--refresh`: Changes the circuit and gets a new IP.
 - `-i` or `--ip`: Displays the current public IP address.
-
-## Use Cases
-
-You can use the tool as follows:
-
-```shell
-python3 privacynet.py -l
- [+] Anonymizer status [ON]
- [*] Getting public IP, please wait...
- [?] Still waiting for IP address...
- [+] Your IP is {ip adresi}
- [+] Country: {Country}
- [+] City: {city}
- 
- ************* OR *************
- 
- python3 privacynet.py -a -t 30
- [*] Getting public IP, please wait...
- [+] Your IP is 109.70.100.82
- [+] Country: Austria
- [+] City: Vienna
- [*] IP changed successfully
-
- [*] Getting public IP, please wait...
- [+] Your IP is 192.42.116.176
- [+] Country: Netherlands
- [+] City: Amsterdam
- [*] IP changed successfully
-
- [*] Getting public IP, please wait...
- [+] Your IP is 45.154.98.28
- [+] Country: Netherlands
- [+] City: Oude Meer
- [*] IP changed successfully
-.
+- `-a` or `--auto`: This option enables automatic IP change every X seconds
+- `-t` or `--interval`: Interval for automatic IP change in seconds (default: 3600)
 
 
-```
 
 ## Contributing
 Contributions are welcome! To contribute to PrivacyNet, follow these steps:
