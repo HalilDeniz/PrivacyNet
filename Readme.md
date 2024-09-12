@@ -51,6 +51,9 @@ python3 privacynet.py
 - `-a` or `--auto`: This option enables automatic IP change every X seconds
 - `-t` or `--interval`: Interval for automatic IP change in seconds (default: 3600)
 
+## Usage Examples
+
+Here are some usage examples of PrivacyNet: [You can explore it here](https://denizhalil.com/2024/09/12/privacynet-anonymization-tool/):
 
 
 ## Contributing
@@ -80,9 +83,10 @@ If you have any questions, comments, or suggestions about PrivacyNet, please fee
 PrivacyNet is a fork of the original tool called toriptables2, which was created by [Rupe](https://github.com/ruped24). Rupe developed the initial version of the tool two years ago. However, the original tool was written in Python 2.7 and is no longer compatible with the latest versions. Therefore, this forked version, PrivacyNet, has been updated and modified to work with Python 3.
 I would like to express my gratitude to Rupe for the inspiration and foundation provided by the original tool. Without his work, this updated version would not have been possible.
 If you would like to learn more about the original tool, you can visit the [toriptables2 repository](https://github.com/ruped24/toriptables2).
- ## 💰 You can help me by Donating
-  [![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/halildeniz) 
-  [![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/denizhalil) 
+
+## 💰 You can help me by Donating
+[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/halildeniz) 
+[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/denizhalil) 
 
 
 ## License
